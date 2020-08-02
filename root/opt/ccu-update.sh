@@ -18,6 +18,39 @@ killall ReGaHss.normal
 killall ReGaHss.legacy
 killall cuxd
 
+wget -q -O - https://www.debmatic.de/debmatic/public.key | sudo apt-key add -
+apt update
+
+apt-get install etherwake -y
+apt-get install digitemp -y
+apt-get install u-boot-tools -y
+apt-get install dirmngr -y
+apt-get install lighttpd -y
+apt-get install git -y
+apt-get install libc6-i386 -y
+apt-get install lib32stdc++6 -y
+apt-get install lib32gcc1 -y
+apt-get install lib32ncurses5 -y
+apt-get install libusb-1.0.0:i386 -y
+apt-get install libusb-1.0.0 -y
+apt-get install curl -y
+apt-get install psmisc -y
+apt-get install socat -y
+apt-get install keyboard-configuration -y
+apt-get install libasound2 -y
+apt-get install wget -y
+apt-get install libasound2-data -y
+apt-get install autoconf -y
+apt-get install libusb-1.0 -y
+apt-get install build-essential -y
+apt-get install msmtp -y
+apt-get install net-tools -y
+apt-get install usbutils -y
+apt-get install openjdk-11-jre-headless -y
+apt-get install rsync -y
+apt-get install cron -y
+apt-get install sudo -y
+
 rm /www/* -R
 rm -f /etc/init.d/S01InitHost
 rm -f /etc/init.d/S49hs485d
@@ -37,6 +70,7 @@ cp -rf /opt/occu-x86/root/bin/* /bin/
 cp -rf /opt/occu-x86/root/opt/ccu* /opt/
 cp -rf /opt/occu-x86/root/www/* /www/
 cp -rf /opt/occu-x86/root/etc/init.d/* /etc/init.d/
+cp -rf /opt/occu-x86/root/etc/cron.d/ccu /etc/cron.d/
 
 rm -rf /etc/lighttpd/*
 cp -rf /opt/occu/X86_32_Debian_Wheezy/packages/lighttpd/etc/lighttpd/* /etc/lighttpd/
@@ -64,7 +98,6 @@ cp -rf /opt/occu/X86_32_Debian_Wheezy/packages-eQ-3/WebUI-Beta/lib/* /lib/
 
 versionOCCU=`git -C /opt/occu/ describe --tags`
 versionX86=`git -C /opt/occu-x86/ describe --tags`
-/bin/sed -i -n '/WEBUI_VERSION = "/{:a;N;/;/!ba;N;s/.*\n/    WEBUI_VERSION = "'$versionOCCU' \/ '$versionX86'";\n\n/};p' /www/rega/pages/index.htm
 
 #Remove buildID (char) from Version
 chrlen=${#versionOCCU}
@@ -95,8 +128,10 @@ do
         patch --forward -d / -p0 < $f >> /var/log/ccuupdate.txt
 done
 
-#Legacy mods
+#Update version ID
+/bin/sed -i -n '/WEBUI_VERSION = "/{:a;N;/;/!ba;N;s/.*\n/    WEBUI_VERSION = "'$versionOCCU' \/ '$versionX86'";\n\n/};p' /www/rega/pages/index.htm
 
+#Legacy mods
 if [[ -e /etc/config/crRFD.conf ]]
 then
         hmipdevice=`cat /etc/config/crRFD.conf`
